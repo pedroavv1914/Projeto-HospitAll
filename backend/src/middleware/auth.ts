@@ -177,3 +177,6 @@ export const checkTokenExpiry = (req: Request, res: Response, next: NextFunction
   
   next();
 };
+
+// Alias para compatibilidade com as rotas
+export const authMiddleware = authenticateToken;
