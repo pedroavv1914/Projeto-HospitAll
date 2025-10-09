@@ -15,7 +15,7 @@ class JWTUtils {
   private static refreshExpiresIn = process.env.JWT_REFRESH_EXPIRES_IN || '30d';
 
   static generateToken(payload: object): string {
-    return jwt.sign(payload, this.secret, { expiresIn: this.expiresIn });
+    return jwt.sign(payload, this.secret, { expiresIn: this.expiresIn } as jwt.SignOptions);
   }
 
   /**
@@ -62,7 +62,7 @@ class JWTUtils {
       role: user.role,
     };
 
-    return jwt.sign(payload, this.secret, { expiresIn: this.refreshExpiresIn });
+    return jwt.sign(payload, this.secret, { expiresIn: this.refreshExpiresIn } as jwt.SignOptions);
   }
 
   /**
