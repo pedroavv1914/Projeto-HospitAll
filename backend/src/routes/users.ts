@@ -19,7 +19,7 @@ const router = Router();
 
 /**
  * @swagger
- * /api/users:
+ * /api/v1/users:
  *   get:
  *     summary: Listar usuários com paginação e filtros
  *     tags: [Users]
@@ -106,7 +106,7 @@ router.get('/',
 
 /**
  * @swagger
- * /api/users/profile:
+ * /api/v1/users/profile:
  *   get:
  *     summary: Obter perfil do usuário logado
  *     tags: [Users]
@@ -137,7 +137,7 @@ router.get('/profile',
 
 /**
  * @swagger
- * /api/users/profile:
+ * /api/v1/users/profile:
  *   put:
  *     summary: Atualizar perfil do usuário logado
  *     tags: [Users]
@@ -185,7 +185,7 @@ router.put('/profile',
 
 /**
  * @swagger
- * /api/users/{id}:
+ * /api/v1/users/{id}:
  *   get:
  *     summary: Buscar usuário por ID
  *     tags: [Users]
@@ -231,7 +231,7 @@ router.get('/:id',
 
 /**
  * @swagger
- * /api/users:
+ * /api/v1/users:
  *   post:
  *     summary: Criar novo usuário (apenas admin)
  *     tags: [Users]
@@ -309,7 +309,7 @@ router.post('/',
 
 /**
  * @swagger
- * /api/users/{id}:
+ * /api/v1/users/{id}:
  *   put:
  *     summary: Atualizar usuário
  *     tags: [Users]
@@ -382,7 +382,7 @@ router.put('/:id',
 
 /**
  * @swagger
- * /api/users/{id}/deactivate:
+ * /api/v1/users/{id}/deactivate:
  *   patch:
  *     summary: Desativar usuário
  *     tags: [Users]
@@ -423,7 +423,7 @@ router.patch('/:id/deactivate',
 
 /**
  * @swagger
- * /api/users/{id}/activate:
+ * /api/v1/users/{id}/activate:
  *   patch:
  *     summary: Reativar usuário
  *     tags: [Users]
@@ -464,7 +464,7 @@ router.patch('/:id/activate',
 
 /**
  * @swagger
- * /api/users/{id}:
+ * /api/v1/users/{id}:
  *   delete:
  *     summary: Deletar usuário permanentemente (apenas admin)
  *     tags: [Users]
