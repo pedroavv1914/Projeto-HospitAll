@@ -14,7 +14,7 @@ const router = Router();
 
 /**
  * @swagger
- * /api/auth/login:
+ * /api/v1/auth/login:
  *   post:
  *     summary: Login do usuário
  *     tags: [Authentication]
@@ -72,7 +72,7 @@ router.post('/login', authValidation.login, AuthController.login);
 
 /**
  * @swagger
- * /api/auth/register:
+ * /api/v1/auth/register:
  *   post:
  *     summary: Registro de novo usuário
  *     tags: [Authentication]
@@ -150,7 +150,7 @@ router.post('/register', authValidation.register, AuthController.register);
 
 /**
  * @swagger
- * /api/auth/refresh:
+ * /api/v1/auth/refresh:
  *   post:
  *     summary: Renovar token de acesso
  *     tags: [Authentication]
@@ -198,7 +198,7 @@ router.post('/refresh', authValidation.refreshToken, AuthController.refreshToken
 
 /**
  * @swagger
- * /api/auth/logout:
+ * /api/v1/auth/logout:
  *   post:
  *     summary: Logout do usuário
  *     tags: [Authentication]
@@ -225,7 +225,7 @@ router.post('/logout', authenticateToken, AuthController.logout);
 
 /**
  * @swagger
- * /api/auth/verify:
+ * /api/v1/auth/verify:
  *   get:
  *     summary: Verificar se o token é válido
  *     tags: [Authentication]
@@ -265,7 +265,7 @@ router.get('/verify', authenticateToken, checkTokenExpiry, AuthController.verify
 
 /**
  * @swagger
- * /api/auth/change-password:
+ * /api/v1/auth/change-password:
  *   put:
  *     summary: Alterar senha do usuário
  *     tags: [Authentication]
