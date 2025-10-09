@@ -14,7 +14,13 @@ class JWTUtils {
   private static expiresIn = process.env.JWT_EXPIRES_IN || '7d';
   private static refreshExpiresIn = process.env.JWT_REFRESH_EXPIRES_IN || '30d';
 
-  static generateToken(payload: object): string {
+  static generateToken(user: User): string {
+    const payload: JWTPayload = {
+      id: user.id,
+      email: user.email,
+      role: user.role,
+    };
+
     return jwt.sign(payload, this.secret, { expiresIn: this.expiresIn } as jwt.SignOptions);
   }
 
