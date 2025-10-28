@@ -26,6 +26,8 @@ export default function RegisterPage() {
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(false);
+  const [debugInfo, setDebugInfo] = useState<any | null>(null);
+  const [showDebug, setShowDebug] = useState(false);
   
   const router = useRouter();
 
@@ -130,6 +132,21 @@ export default function RegisterPage() {
         });
       }
 
+      const debug = {
+        ts: new Date().toISOString(),
+        message: backendErrorMsg || error?.message || 'Falha ao criar conta',
+        status: error?.response?.status,
+        method: error?.config?.method,
+        url: error?.config?.url,
+        data: error?.response?.data,
+        code: error?.code,
+        requestId: error?.response?.headers?.['x-request-id'] || error?.response?.headers?.['x-correlation-id'],
+      };
+      // Log estruturado para depuração
+      // eslint-disable-next-line no-console
+      console.error('[RegisterError]', debug);
+
+      setDebugInfo(debug);
       setErrors({
         ...fieldErrors,
         general: backendErrorMsg || 'Erro ao criar conta. Tente novamente.'
@@ -142,15 +159,36 @@ export default function RegisterPage() {
   return (
     <div className={styles.container}>
       <div className={styles.registerCard}>
+        <div className={styles.cardAccent}></div>
+        <div className={styles.cardSheen} aria-hidden="true"></div>
         <div className={styles.header}>
           <h1 className={styles.title}>Criar Conta</h1>
           <p className={styles.subtitle}>Cadastre-se no HospitAll</p>
+          <div className={styles.headerDivider}></div>
         </div>
 
         <form onSubmit={handleSubmit} className={styles.form}>
-          {errors.general && (
-            <div className={styles.errorMessage}>
-              {errors.general}
+          {(errors.general || debugInfo) && (
+            <div className={styles.errorPanel}>
+              <div className={styles.errorTitle}>{errors.general || 'Falha ao processar seu cadastro.'}</div>
+              <button type="button" className={styles.errorToggle} onClick={() => setShowDebug(v => !v)}>
+                {showDebug ? 'Ocultar detalhes técnicos' : 'Mostrar detalhes técnicos'}
+              </button>
+              {showDebug && debugInfo && (
+                <div className={styles.errorBody}>
+                  <div className={styles.errorMeta}>
+                    <span>Código: {debugInfo.status ?? '-'}</span>
+                    <span>Método: {debugInfo.method ?? '-'}</span>
+                    <span>URL: {debugInfo.url ?? '-'}</span>
+                    <span>Hora: {new Date(debugInfo.ts).toLocaleString()}</span>
+                    {debugInfo.requestId && <span>ReqID: {debugInfo.requestId}</span>}
+                    {debugInfo.code && <span>Code: {debugInfo.code}</span>}
+                  </div>
+                  {debugInfo.data && (
+                    <pre className={styles.errorJson}>{JSON.stringify(debugInfo.data, null, 2)}</pre>
+                  )}
+                </div>
+              )}
             </div>
           )}
 
@@ -162,6 +200,7 @@ export default function RegisterPage() {
               onChange={handleChange}
               error={errors.nome}
               placeholder="Seu nome completo"
+              className={`${styles.inputLight} bg-white text-gray-900 placeholder:text-gray-500 border-gray-300`}
               required
             />
           </div>
@@ -175,6 +214,7 @@ export default function RegisterPage() {
               onChange={handleChange}
               error={errors.email}
               placeholder="seu@email.com"
+              className={`${styles.inputLight} bg-white text-gray-900 placeholder:text-gray-500 border-gray-300`}
               required
             />
             <Input
@@ -185,6 +225,7 @@ export default function RegisterPage() {
               onChange={handleChange}
               error={errors.password}
               placeholder="Mínimo 6 caracteres"
+              className={`${styles.inputLight} bg-white text-gray-900 placeholder:text-gray-500 border-gray-300`}
               required
             />
           </div>
@@ -198,6 +239,7 @@ export default function RegisterPage() {
               error={errors.cpf}
               placeholder="000.000.000-00"
               helperText="Formato: XXX.XXX.XXX-XX"
+              className={`${styles.inputLight} bg-white text-gray-900 placeholder:text-gray-500 border-gray-300`}
               required
             />
             <Input
@@ -208,6 +250,7 @@ export default function RegisterPage() {
               error={errors.telefone}
               placeholder="(11) 99999-9999"
               helperText="Formato: (XX) XXXXX-XXXX"
+              className={`${styles.inputLight} bg-white text-gray-900 placeholder:text-gray-500 border-gray-300`}
               required
             />
           </div>
@@ -220,6 +263,7 @@ export default function RegisterPage() {
               value={formData.data_nascimento}
               onChange={handleChange}
               error={errors.data_nascimento}
+              className={`${styles.inputLight} bg-white text-gray-900 placeholder:text-gray-500 border-gray-300`}
               required
             />
             <div className={styles.selectGroup}>
@@ -245,12 +289,16 @@ export default function RegisterPage() {
               onChange={handleChange}
               error={errors.endereco}
               placeholder="Rua, número, bairro, cidade"
+              className={`${styles.inputLight} bg-white text-gray-900 placeholder:text-gray-500 border-gray-300`}
               required
             />
           </div>
 
           {formData.tipo_usuario === 'medico' && (
             <div className={styles.medicoFields}>
+              <div className={styles.sectionHeader}>
+                <span className={styles.sectionTag}>Informações do Médico</span>
+              </div>
               <div className={styles.row}>
                 <Input
                   label="CRM"
@@ -259,6 +307,7 @@ export default function RegisterPage() {
                   onChange={handleChange}
                   error={errors.crm}
                   placeholder="CRM/UF 123456"
+                  className={`${styles.inputLight} bg-white text-gray-900 placeholder:text-gray-500 border-gray-300`}
                   required
                 />
                 <Input
@@ -268,6 +317,7 @@ export default function RegisterPage() {
                   onChange={handleChange}
                   error={errors.especialidade}
                   placeholder="Ex: Cardiologia"
+                  className={`${styles.inputLight} bg-white text-gray-900 placeholder:text-gray-500 border-gray-300`}
                   required
                 />
               </div>
@@ -276,6 +326,9 @@ export default function RegisterPage() {
 
           {formData.tipo_usuario === 'paciente' && (
             <div className={styles.pacienteFields}>
+              <div className={styles.sectionHeader}>
+                <span className={styles.sectionTag}>Informações do Paciente</span>
+              </div>
               <div className={styles.row}>
                 <Input
                   label="Número SUS (opcional)"
@@ -283,6 +336,7 @@ export default function RegisterPage() {
                   value={formData.numero_sus}
                   onChange={handleChange}
                   placeholder="000 0000 0000 0000"
+                  className={`${styles.inputLight} bg-white text-gray-900 placeholder:text-gray-500 border-gray-300`}
                 />
                 <Input
                   label="Plano de Saúde (opcional)"
@@ -290,6 +344,7 @@ export default function RegisterPage() {
                   value={formData.plano_saude}
                   onChange={handleChange}
                   placeholder="Nome do plano"
+                  className={`${styles.inputLight} bg-white text-gray-900 placeholder:text-gray-500 border-gray-300`}
                 />
               </div>
             </div>
@@ -298,8 +353,17 @@ export default function RegisterPage() {
           <Button
             type="submit"
             loading={loading}
-            className={styles.submitButton}
+            size="lg"
+            className={`${styles.submitButton} ${styles.submitButtonGradient}`}
           >
+            {!loading && (
+              <svg className={styles.buttonIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <path d="M16 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2" />
+                <circle cx="9" cy="7" r="4" />
+                <path d="M20 8v6" />
+                <path d="M23 11h-6" />
+              </svg>
+            )}
             {loading ? 'Criando conta...' : 'Criar Conta'}
           </Button>
         </form>
