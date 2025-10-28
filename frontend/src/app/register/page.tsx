@@ -7,6 +7,7 @@ import Input from '@/components/ui/Input';
 import api from '@/lib/api';
 import { RegisterRequest } from '@/types';
 import styles from './register.module.css';
+import { formatCpf, formatPhone, formatSus } from '@/lib/masks';
 
 export default function RegisterPage() {
   const [formData, setFormData] = useState<RegisterRequest>({
@@ -30,9 +31,15 @@ export default function RegisterPage() {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
+
+    let newValue = value;
+    if (name === 'cpf') newValue = formatCpf(value);
+    if (name === 'telefone') newValue = formatPhone(value);
+    if (name === 'numero_sus') newValue = formatSus(value);
+
     setFormData(prev => ({
       ...prev,
-      [name]: value
+      [name]: newValue
     }));
     // Limpar erro do campo quando o usuário começar a digitar
     if (errors[name]) {
@@ -56,9 +63,17 @@ export default function RegisterPage() {
       newErrors.password = 'Senha é obrigatória';
     } else if (formData.password.length < 6) {
       newErrors.password = 'Senha deve ter pelo menos 6 caracteres';
+    } else if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{6,100}$/.test(formData.password)) {
+      newErrors.password = 'Senha deve conter 1 minúscula, 1 maiúscula e 1 número';
     }
     if (!formData.cpf) newErrors.cpf = 'CPF é obrigatório';
+    else if (!/^\d{3}\.\d{3}\.\d{3}-\d{2}$/.test(formData.cpf)) {
+      newErrors.cpf = 'CPF deve estar no formato XXX.XXX.XXX-XX';
+    }
     if (!formData.telefone) newErrors.telefone = 'Telefone é obrigatório';
+    else if (!/^\(\d{2}\)\s\d{4,5}-\d{4}$/.test(formData.telefone)) {
+      newErrors.telefone = 'Telefone deve estar no formato (XX) XXXXX-XXXX';
+    }
     if (!formData.data_nascimento) newErrors.data_nascimento = 'Data de nascimento é obrigatória';
     if (!formData.endereco) newErrors.endereco = 'Endereço é obrigatório';
 
@@ -79,11 +94,45 @@ export default function RegisterPage() {
 
     setLoading(true);
     try {
-      await api.post('/auth/register', formData);
+      // Mapear campos do formulário (pt-BR) para o payload esperado pelo backend (en-US)
+      const payload = {
+        name: formData.nome.trim(),
+        email: formData.email.trim(),
+        password: formData.password,
+        cpf: formData.cpf.trim(),
+        phone: formData.telefone.trim(),
+        role: formData.tipo_usuario === 'medico' ? 'doctor' : 'patient',
+      };
+
+      await api.post('/auth/register', payload);
       router.push('/login?message=Cadastro realizado com sucesso! Faça login para continuar.');
     } catch (error: any) {
+      // Tentar exibir mensagens de validação de campo vindas do backend
+      const details = error?.response?.data?.details;
+      const backendErrorMsg = error?.response?.data?.message || error?.response?.data?.error;
+      const fieldErrors: Record<string, string> = {};
+
+      if (Array.isArray(details)) {
+        const fieldMap: Record<string, string> = {
+          name: 'nome',
+          email: 'email',
+          password: 'password',
+          cpf: 'cpf',
+          phone: 'telefone',
+          role: 'tipo_usuario',
+        };
+
+        details.forEach((d: any) => {
+          const field = d.path || d.param || d.field;
+          const msg = d.msg || d.message || 'Valor inválido';
+          const mapped = fieldMap[field] || field;
+          fieldErrors[mapped] = msg;
+        });
+      }
+
       setErrors({
-        general: error.response?.data?.message || 'Erro ao criar conta. Tente novamente.'
+        ...fieldErrors,
+        general: backendErrorMsg || 'Erro ao criar conta. Tente novamente.'
       });
     } finally {
       setLoading(false);
@@ -148,6 +197,7 @@ export default function RegisterPage() {
               onChange={handleChange}
               error={errors.cpf}
               placeholder="000.000.000-00"
+              helperText="Formato: XXX.XXX.XXX-XX"
               required
             />
             <Input
@@ -157,6 +207,7 @@ export default function RegisterPage() {
               onChange={handleChange}
               error={errors.telefone}
               placeholder="(11) 99999-9999"
+              helperText="Formato: (XX) XXXXX-XXXX"
               required
             />
           </div>
