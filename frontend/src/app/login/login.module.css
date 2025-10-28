@@ -46,8 +46,9 @@
   pointer-events: none;
 }
 .rightPanel {
-  flex: 1 1 45%;
-  max-width: 460px;
+  flex: 0 0 auto;
+  max-width: 520px;
+  width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -177,6 +178,31 @@
   background: #ffffff;
   border: 1px solid #e6edf9;
   box-shadow: 0 22px 60px rgba(21, 41, 75, 0.18);
+  backdrop-filter: saturate(1.05) contrast(1.02);
+}
+.loginCard::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  padding: 1px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #22d3ee, #38bdf8, #0ea5e9);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+.loginCard::after {
+  content: '';
+  position: absolute;
+  left: 18px;
+  right: 18px;
+  bottom: -10px;
+  height: 18px;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(12, 26, 52, 0.18), rgba(12, 26, 52, 0));
+  filter: blur(8px);
+  pointer-events: none;
 }
 .cardAccent {
   position: absolute;
@@ -230,6 +256,7 @@
 }
 .inputLight:hover { border-color: #3b82f6 !important; }
 .inputLight:focus-visible { border-color: #2563eb !important; }
+.inputLight:focus-visible { box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.35) inset; }
 
 /* Icons inside inputs via data-URI */
 .iconEmail {
@@ -306,6 +333,35 @@
   transform: translateY(0);
 }
 
+.submitButtonGradient {
+  background: linear-gradient(90deg, #2563eb, #1d4ed8);
+  color: #ffffff;
+  position: relative;
+  overflow: hidden;
+}
+.submitButtonGradient:hover {
+  background: linear-gradient(90deg, #1e40af, #1d4ed8);
+}
+.submitButtonGradient::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -40%;
+  width: 40%;
+  height: 100%;
+  background: linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,0.35), rgba(255,255,255,0));
+  transform: skewX(-20deg);
+  opacity: 0;
+  transition: transform 400ms ease, opacity 400ms ease;
+}
+.submitButtonGradient:hover::before {
+  transform: translateX(260%) skewX(-20deg);
+  opacity: 1;
+}
+.submitButtonGradient:focus-visible {
+  box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.45), 0 12px 40px rgba(37, 99, 235, 0.35);
+}
+
 .buttonRow {
   display: flex;
   gap: 10px;
@@ -314,9 +370,26 @@
   border: 1px solid #c9d6ee;
   color: #0b2a68;
   background: #ffffff;
+  position: relative;
+  overflow: hidden;
+  transition: transform 150ms ease, box-shadow 150ms ease;
 }
 .buttonOutline:hover {
-  background: #f5f8ff;
+  background: linear-gradient(180deg, #f8fbff, #eef4ff);
+  transform: translateY(-1px);
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.12);
+}
+.buttonOutline::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  padding: 1px;
+  border-radius: inherit;
+  background: linear-gradient(135deg, #cbd5e1, #94a3b8);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
 }
 
 .socialRow {
@@ -339,6 +412,7 @@
   text-decoration: none;
 }
 .socialLink:hover { background: #f5f8ff; }
+.socialLink svg { width: 16px; height: 16px; }
 
 .footer {
   margin-top: 16px;
