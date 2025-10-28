@@ -1,20 +1,61 @@
 .container {
+  position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  padding: 2rem 1rem;
+  padding: 32px;
+  background: radial-gradient(120% 120% at 20% 0%, #0b2b4a 0%, #0a2640 40%, #0a2340 60%, #081f36 100%),
+              radial-gradient(80% 80% at 80% 10%, rgba(28, 199, 235, 0.25) 0%, rgba(3, 54, 77, 0) 70%),
+              radial-gradient(80% 80% at 10% 90%, rgba(11, 144, 180, 0.25) 0%, rgba(3, 54, 77, 0) 70%);
+  overflow: hidden;
+}
+.container::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+                    linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+  background-size: 24px 24px;
+  mask-image: radial-gradient(closest-side, rgba(255,255,255,0.5), transparent 70%);
 }
 
 .registerCard {
-  background: white;
-  border-radius: 1rem;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-  padding: 2.5rem;
+  position: relative;
+  background: #ffffff;
+  border-radius: 12px;
+  border: 1px solid #e6edf9;
+  box-shadow: 0 22px 60px rgba(21, 41, 75, 0.18);
+  padding: 28px 26px;
   width: 100%;
-  max-width: 800px;
+  max-width: 860px;
   animation: slideUp 0.5s ease-out;
+  backdrop-filter: saturate(1.05) contrast(1.02);
+}
+.registerCard::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  padding: 1px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #22d3ee, #38bdf8, #0ea5e9);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+.registerCard::after {
+  content: '';
+  position: absolute;
+  left: 18px;
+  right: 18px;
+  bottom: -10px;
+  height: 18px;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(12, 26, 52, 0.18), rgba(12, 26, 52, 0));
+  filter: blur(8px);
+  pointer-events: none;
 }
 
 @keyframes slideUp {
@@ -72,6 +113,56 @@
   text-align: center;
 }
 
+/* Painel de erro detalhado */
+.errorPanel {
+  border: 1px solid #f3d3d3;
+  background: #fff6f6;
+  color: #7a2a2a;
+  border-radius: 10px;
+  padding: 0.75rem 0.9rem;
+  margin-bottom: 0.75rem;
+}
+.errorTitle { font-weight: 700; margin-bottom: 0.35rem; }
+.errorToggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.82rem;
+  color: #b91c1c;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 2px 0;
+  text-decoration: underline;
+}
+.errorBody { margin-top: 0.5rem; }
+.errorMeta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+  font-size: 0.8rem;
+  color: #6b1b1b;
+}
+.errorJson {
+  margin-top: 0.35rem;
+  max-height: 180px;
+  overflow: auto;
+  background: #fff;
+  border: 1px dashed #f3d3d3;
+  border-radius: 8px;
+  padding: 8px;
+  font-size: 0.78rem;
+}
+
+/* Harmonização adicional com tela de login */
+.title { font-weight: 800; color: #0b2a68; }
+.subtitle { color: #55627a; }
+.headerDivider { height: 1px; margin: 10px 0 18px 0; background: linear-gradient(90deg, #eef3fb, #e6edf9); }
+
+.inputLight { height: 44px; border-radius: 8px; }
+.inputLight:hover { border-color: #3b82f6 !important; }
+.inputLight:focus-visible { border-color: #2563eb !important; box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.35) inset; }
+
 .selectGroup {
   display: flex;
   flex-direction: column;
@@ -98,7 +189,7 @@
 
 .select:focus {
   outline: none;
-  border-color: var(--primary-color);
+  border-color: #2563eb;
   box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
 }
 
@@ -115,7 +206,7 @@
   content: "Informações do Médico";
   display: block;
   font-weight: 600;
-  color: var(--primary-color);
+  color: #2563eb;
   margin-bottom: 1rem;
   font-size: 0.9rem;
 }
@@ -124,7 +215,7 @@
   content: "Informações do Paciente";
   display: block;
   font-weight: 600;
-  color: var(--primary-color);
+  color: #2563eb;
   margin-bottom: 1rem;
   font-size: 0.9rem;
 }
@@ -190,3 +281,200 @@
     padding: 1rem;
   }
 }
+
+/* Overrides finais para harmonia com o login */
+.footer { border-top: 1px solid #e6edf9; }
+.footer p { color: #55627a; }
+.link { color: #2563eb; }
+.link:hover { color: #1e40af; }
+.submitButton { border-radius: 12px; letter-spacing: 0.2px; box-shadow: 0 12px 40px rgba(37, 99, 235, 0.25); transform: translateZ(0); transition: transform 150ms ease, box-shadow 150ms ease; }
+.submitButton:hover { transform: translateY(-1px); box-shadow: 0 18px 50px rgba(37, 99, 235, 0.35); }
+.submitButtonGradient { background: linear-gradient(90deg, #2563eb, #1d4ed8); color: #ffffff; position: relative; overflow: hidden; }
+.submitButtonGradient::before { content: ''; position: absolute; top: 0; left: -40%; width: 40%; height: 100%; background: linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,0.35), rgba(255,255,255,0)); transform: skewX(-20deg); opacity: 0; transition: transform 400ms ease, opacity 400ms ease; }
+.submitButtonGradient:hover::before { transform: translateX(260%) skewX(-20deg); opacity: 1; }
+.cardAccent { position: absolute; top: 0; left: 0; right: 0; height: 4px; border-top-left-radius: 12px; border-top-right-radius: 12px; background: linear-gradient(90deg, #22d3ee, #38bdf8, #0ea5e9); }
+
+/* Redesign premium do card de cadastro */
+.registerCard {
+  position: relative;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(12px) saturate(120%);
+  -webkit-backdrop-filter: blur(12px) saturate(120%);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  box-shadow:
+    0 30px 60px rgba(13, 38, 98, 0.16),
+    inset 0 1px rgba(255, 255, 255, 0.35);
+  transition: transform 180ms ease, box-shadow 180ms ease;
+  padding: 1.5rem 1.25rem;
+  max-width: 820px;
+  margin: 0 auto;
+}
+
+.registerCard:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 40px 80px rgba(13, 38, 98, 0.22), inset 0 1px rgba(255, 255, 255, 0.35);
+}
+
+.registerCard::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(135deg, #22d3ee, #a78bfa, #60a5fa);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+.registerCard::after {
+  content: '';
+  position: absolute;
+  left: 16px;
+  right: 16px;
+  bottom: -18px;
+  height: 24px;
+  filter: blur(20px);
+  background: radial-gradient(closest-side, rgba(37, 99, 235, 0.25), transparent);
+  border-radius: 999px;
+  pointer-events: none;
+}
+
+.cardSheen {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(135deg, rgba(255,255,255,0.12), rgba(255,255,255,0));
+  opacity: 0;
+  transition: opacity 250ms ease;
+  pointer-events: none;
+}
+
+.registerCard:hover .cardSheen { opacity: 1; }
+
+/* Divisor de cabeçalho com gradiente sutil */
+.headerDivider {
+  height: 1px;
+  margin-top: 0.5rem;
+  background: linear-gradient(90deg, rgba(37, 99, 235, 0), rgba(37, 99, 235, 0.35), rgba(37, 99, 235, 0));
+}
+
+/* Ritmo e espaçamento entre linhas de campos */
+.row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.85rem;
+  align-items: start;
+}
+.row > * { min-width: 0; }
+
+.header { margin-bottom: 0.75rem; }
+.title { font-size: 1.7rem; }
+.subtitle { margin-top: 0.25rem; color: #64748b; }
+
+/* Rótulos de seção personalizados */
+.sectionHeader { margin: 0.25rem 0 0.5rem; }
+.sectionTag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(37, 99, 235, 0.08);
+  color: #2563eb;
+  border: 1px solid rgba(37, 99, 235, 0.25);
+  box-shadow: inset 0 1px rgba(255, 255, 255, 0.5);
+  font-weight: 600;
+  font-size: 0.875rem;
+  letter-spacing: 0.1px;
+}
+.sectionTag::before {
+  content: '';
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #38bdf8, #2563eb);
+  box-shadow: 0 0 8px rgba(56, 189, 248, 0.6);
+}
+
+.medicoFields,
+.pacienteFields {
+  padding: 0.5rem 0.75rem;
+  background: rgba(255, 255, 255, 0.55);
+  border-radius: 12px;
+  border: 1px solid rgba(226, 232, 240, 0.7);
+}
+
+/* Efeitos avançados nos botões */
+@keyframes glowPulse {
+  0% { box-shadow: 0 12px 40px rgba(37, 99, 235, 0.25); }
+  50% { box-shadow: 0 16px 54px rgba(29, 78, 216, 0.38); }
+  100% { box-shadow: 0 12px 40px rgba(37, 99, 235, 0.25); }
+}
+.submitButtonGradient:hover { animation: glowPulse 2.4s ease-in-out infinite; }
+.submitButtonGradient:active {
+  transform: translateY(0) scale(0.985);
+  box-shadow: 0 8px 28px rgba(29, 78, 216, 0.35);
+}
+.submitButtonGradient::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 10px;
+  height: 10px;
+  transform: translate(-50%, -50%) scale(0);
+  border-radius: 999px;
+  background: radial-gradient(circle, rgba(255,255,255,0.6), rgba(255,255,255,0));
+  opacity: 0;
+  pointer-events: none;
+}
+.submitButtonGradient:active::after {
+  transform: translate(-50%, -50%) scale(12);
+  opacity: 1;
+  transition: transform 360ms ease, opacity 650ms ease;
+}
+.buttonIcon {
+  width: 18px;
+  height: 18px;
+  margin-right: 8px;
+  flex-shrink: 0;
+}
+
+/* Professional compact overrides */
+.registerCard {
+  padding: 1rem 1rem;
+  max-width: 780px;
+  border-radius: 12px;
+  background: #ffffff;
+  box-shadow: 0 12px 32px rgba(14, 30, 54, 0.12);
+}
+
+.header { margin-bottom: 0.75rem; }
+.title { font-size: 1.6rem; color: #0b2a68; }
+.subtitle { font-size: 0.875rem; color: #5b667a; }
+
+.form { gap: 1rem; }
+.row { gap: 0.75rem; }
+.inputLight { height: 40px; }
+
+.medicoFields,
+.pacienteFields {
+  margin-top: 0.25rem;
+  padding: 0.75rem;
+  background: #fafafc;
+  border: 1px solid #e9eef5;
+}
+
+.cardSheen { opacity: 0; }
+.registerCard:hover .cardSheen { opacity: 0.06; }
+
+.submitButton { height: 2.75rem; box-shadow: 0 8px 24px rgba(37, 99, 235, 0.18); }
+.submitButtonGradient { background: linear-gradient(180deg, #2563eb, #1f4fd5); }
+.submitButtonGradient::before { display: none; }
+.submitButtonGradient:hover { filter: brightness(0.98); box-shadow: 0 12px 32px rgba(31, 79, 213, 0.22); }
+.submitButtonGradient:active { transform: scale(0.995); box-shadow: 0 8px 24px rgba(31, 79, 213, 0.20); }
+.submitButtonGradient:active::after { display: none; }
+.buttonIcon { width: 16px; height: 16px; margin-right: 6px; }
